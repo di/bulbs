@@ -9,9 +9,12 @@ from bulbs.neo4jserver.tests.client_tests import neo4j_client_suite
 from bulbs.titan.tests.bulbs_tests import test_suite as titan_bulbs_suite
 from bulbs.titan.tests.client_tests import titan_client_suite
 
+from bulbs.orientdb.tests.bulbs_tests import test_suite as orientdb_bulbs_suite
+from bulbs.orientdb.tests.client_tests import orientdb_client_suite
+
 
 def suite():
-    # This requires Neo4j Server and Rexster are running.
+    # This requires Neo4j Server, Rexster, and OrientDB are running.
 
     suite = unittest.TestSuite()
 
@@ -23,6 +26,9 @@ def suite():
 
     suite.addTest(titan_client_suite())
     suite.addTest(titan_bulbs_suite())
+
+    suite.addTest(orientdb_client_suite())
+    suite.addTest(orientdb_bulbs_suite())
 
     return suite
 
