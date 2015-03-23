@@ -13,7 +13,8 @@ from bulbs.orientdb import OrientDBClient, ORIENTDB_URI
 from bulbs.orientdb.index import VertexIndexProxy, EdgeIndexProxy, ManualIndex
 
 config = Config(ORIENTDB_URI)
-BulbsTestCase.client = OrientDBClient(config)
+db_name = "GratefulDeadConcerts"
+BulbsTestCase.client = OrientDBClient(config=config, db_name=db_name)
 BulbsTestCase.index_class = ManualIndex
 
 

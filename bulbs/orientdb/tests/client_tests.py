@@ -11,7 +11,7 @@ import time
 
 # Default database. You can override this with the command line:
 # $ python client_tests.py --db mydb
-db_name = "emptygraph"  # emtpygraph has mock transactions enabled
+db_name = "GratefulDeadConcerts"
 
 # client = OrientDBClient(db_name=db_name)
 # client.config.set_logger(DEBUG)
