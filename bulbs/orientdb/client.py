@@ -7,6 +7,7 @@
 Bulbs supports pluggable clients. This is the OrientDB client.
 
 """
+
 from bulbs.config import Config, DEBUG
 from bulbs.registry import Registry
 from bulbs.utils import get_logger
@@ -31,7 +32,7 @@ log = get_logger(__name__)
 vertex_path = "vertices"
 edge_path = "edges"
 index_path = "indices"
-gremlin_path = "tp/gremlin"
+gremlin_path = "gremlin"
 transaction_path = "tp/batch/tx"
 multi_get_path = "tp/batch"
 
@@ -318,16 +319,27 @@ class OrientDBClient(Client):
     default_uri = ORIENTDB_URI
     request_class = OrientDBRequest
 
-    def __init__(self, config=None, db_name=None):
+    def __init__(self, config=None, db_name="GratefulDeadConcerts"):
         # This makes is easy to test different DBs
-        uri = self._get_uri(db_name) or self.default_uri
+        #uri = self._get_uri(db_name) or self.default_uri
 
-        self.config = config or Config(uri, username="admin", password="admin")
-        self.registry = Registry(self.config)
+        self.configs = dict()
+        self.request = dict()
         self.type_system = JSONTypeSystem()
-        self.request = self.request_class(
-            self.config,
-            self.type_system.content_type)
+        self.db_name = db_name
+
+        for command in ['database', 'command']:
+            uri = "%s/%s/%s" % (self.default_uri.rstrip("/"), command, db_name)
+            print(uri)
+            config = Config(uri, username="admin", password="admin")
+            self.configs[command] = config
+            self.registry = Registry(config)
+
+            self.request[command] = self.request_class(
+                config,
+                self.type_system.content_type)
+
+        self.config = self.configs['database']
 
         # OrientDB supports Gremlin so include the Gremlin-Groovy script library
         self.scripts = GroovyScripts(self.config)
@@ -363,7 +375,7 @@ class OrientDBClient(Client):
         params = dict(script=script, params=params)
         if self.config.server_scripts is True:
             params["load"] = load or [self.scripts.default_namespace]
-        return self.request.post(gremlin_path, params)
+        return self.request['command'].post(gremlin_path, params)
 
     # Vertex Proxy
 
