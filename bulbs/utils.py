@@ -254,7 +254,7 @@ def to_date(timestamp):
 #
 
 def extract(desired_keys, bigdict):
-    subset = dict([(i, bigdict[i]) for i in desired_keys if i in bigdict])
+    subset = {i: bigdict[i] for i in desired_keys if i in bigdict}
     return subset
 
 def get_file_path(current_filename, target_filename):
